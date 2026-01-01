@@ -28,5 +28,12 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # 7. Mở Port 8000
 EXPOSE 8000
 
-# 8. Lệnh chạy mặc định
-CMD ["/usr/bin/supervisord"]
+# ... (các dòng trên giữ nguyên) ...
+
+# Copy file chạy lệnh
+COPY entrypoint.sh .
+# Cấp quyền chạy cho file này
+RUN chmod +x entrypoint.sh
+
+# Chạy script này khi khởi động
+CMD ["./entrypoint.sh"]
