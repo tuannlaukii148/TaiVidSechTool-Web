@@ -18,3 +18,5 @@ __pycache__/
 
 # Bỏ qua file media tải về (đỡ nặng)
 media/downloads/
+
+cookies.txt

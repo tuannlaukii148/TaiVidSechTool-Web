@@ -13,11 +13,9 @@
 
     <style>
         :root {
-            /* Bạn có muốn đổi màu cam này thành màu khác (ví dụ Tím mộng mơ) cho hợp tên mới không? 
-               Nếu muốn thì đổi hex code ở đây nhé */
-            --primary-color: #ff4b1f; 
-            --secondary-color: #ff9068;
-            --bg-color: #f4f7f6;
+            var(--primary-color: #ff4b1f; 
+            var(--secondary-color: #ff9068;
+            var(--bg-color: #f4f7f6;
         }
 
         body {
@@ -61,7 +59,7 @@
         }
 
         .card-header-custom {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, #ff4b1f, #ff9068);
             color: white;
             padding: 30px;
             text-align: center;
@@ -92,12 +90,12 @@
         }
 
         .form-control-lg:focus, .form-select-lg:focus {
-            border-color: var(--secondary-color);
+            border-color: #ff9068;
             box-shadow: 0 0 0 0.2rem rgba(255, 75, 31, 0.25);
         }
 
         .btn-brand {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(to right, #ff4b1f, #ff9068);
             border: none;
             color: white;
             border-radius: 12px;
@@ -108,7 +106,7 @@
         }
 
         .btn-brand:hover {
-            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            background: linear-gradient(to right, #ff9068, #ff4b1f);
             transform: scale(1.02);
             color: white;
         }
@@ -138,18 +136,18 @@
         }
         
         .github-link:hover {
-            color: var(--primary-color);
+            color: #ff4b1f;
             text-decoration: underline;
         }
 
         /* UTILS */
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         
         /* ANIMATION */
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 75, 31, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 75, 31, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 75, 31, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
         }
         .downloading-pulse {
             animation: pulse 2s infinite;
@@ -161,7 +159,7 @@
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{% url 'index' %}">
-                <img src="{% static 'img/logo.png' %}" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/724/724933.png'">
+                <i class="fas fa-rocket text-danger me-2"></i>
                 TaiVidSechTool
             </a>
             <span class="navbar-text d-none d-sm-block fst-italic">
@@ -178,7 +176,9 @@
                         
                         <div class="card-header-custom">
                             <a href="{% url 'index' %}">
-                                <img src="{% static 'img/logo.png' %}" alt="Logo" class="brand-logo-large" onerror="this.src='https://cdn-icons-png.flaticon.com/512/724/724933.png'">
+                                <div class="brand-logo-large d-flex align-items-center justify-content-center mx-auto">
+                                    <i class="fas fa-cloud-download-alt fa-2x text-danger"></i>
+                                </div>
                             </a>
                             <h3 class="fw-bold mb-1">Tải đê k ai đánh giá m xem j đâu</h3>
                             <p class="mb-0 opacity-75">Hỗ trợ Facebook, Youtube, TikTok, Soundcloud (Aria2c Engine)</p>
@@ -282,7 +282,6 @@
                         <a href="https://github.com/tuannlaukii148" target="_blank" class="github-link">
                             <i class="fab fa-github me-1"></i>tuannlaukii148
                         </a> 
-                        using Django & Aria2c.
                     </footer>
                 </div>
             </div>
@@ -310,12 +309,24 @@
                 return;
             }
 
-            // UI Reset
-            document.getElementById('progress-area').classList.remove('hidden');
-            document.getElementById('download-btn').classList.add('hidden');
-            document.getElementById('progress-bar').style.width = '0%';
+            // === [QUAN TRỌNG] RESET GIAO DIỆN (FIX LỖI HIỆN LINK CŨ) ===
+            const progressArea = document.getElementById('progress-area');
+            const downloadBtn = document.getElementById('download-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const statusText = document.getElementById('status-text');
+
+            progressArea.classList.remove('hidden');
+            downloadBtn.classList.add('hidden');         // Ẩn nút tải cũ
+            downloadBtn.href = '#';                      // Xóa link cũ
+            
+            // Reset thanh trạng thái về màu xanh mặc định
+            progressBar.style.width = '0%';
+            progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-gradient'; 
+            
             document.getElementById('percent-text').innerText = '0%';
-            document.getElementById('status-text').innerText = 'Đang kết nối server...';
+            statusText.innerText = 'Đang kết nối server...';
+            statusText.className = 'fw-bold text-primary';
+            // ============================================================
             
             const taskType = document.getElementById('type_video').checked ? 'video' : 'audio';
 
@@ -336,47 +347,69 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(payload)
                 });
+                
+                if (!res.ok) throw new Error("Server Error");
+
                 const data = await res.json();
                 trackProgress(data.task_id);
             } catch (e) {
-                alert("Lỗi kết nối Server! Đảm bảo Celery đang chạy.");
+                statusText.innerText = "❌ Lỗi kết nối! Server có thể đang khởi động.";
+                statusText.classList.add('text-danger');
+                progressBar.classList.add('bg-danger');
+                progressBar.style.width = '100%';
             }
         }
 
         function trackProgress(taskId) {
             const interval = setInterval(async () => {
-                const res = await fetch(`/api/status/${taskId}/`);
-                const data = await res.json();
+                try {
+                    const res = await fetch(`/api/status/${taskId}/`);
+                    const data = await res.json();
 
-                let width = data.progress;
-                if (data.status === 'PENDING') width = 5;
-                if (data.status === 'PROCESSING') width = 95;
+                    let width = data.progress;
+                    if (data.status === 'PENDING') width = 5;
+                    if (data.status === 'PROCESSING') width = 98;
 
-                // Update UI
-                document.getElementById('progress-bar').style.width = width + '%';
-                document.getElementById('percent-text').innerText = width + '%';
+                    // Update UI
+                    const progressBar = document.getElementById('progress-bar');
+                    progressBar.style.width = width + '%';
+                    document.getElementById('percent-text').innerText = Math.round(width) + '%';
 
-                let statusMsg = data.status;
-                if (data.status === 'DOWNLOADING') statusMsg = 'Đang tải dữ liệu...';
-                if (data.status === 'PROCESSING') statusMsg = 'Đang xử lý (Ghép/Convert)...';
-                if (data.status === 'PENDING') statusMsg = 'Đang xếp hàng...';
+                    let statusMsg = data.status;
+                    if (data.status === 'DOWNLOADING') statusMsg = '🚀 Đang tải dữ liệu...';
+                    if (data.status === 'PROCESSING') statusMsg = '⚙️ Đang xử lý (Ghép/Convert)...';
+                    if (data.status === 'PENDING') statusMsg = '⏳ Đang xếp hàng...';
 
-                document.getElementById('status-text').innerText = statusMsg;
+                    document.getElementById('status-text').innerText = statusMsg;
 
-                if (data.status === 'FINISHED') {
-                    clearInterval(interval);
-                    document.getElementById('status-text').innerText = "✅ Hoàn tất!";
-                    document.getElementById('progress-bar').classList.add('bg-success');
-                    
-                    const btn = document.getElementById('download-btn');
-                    btn.href = data.download_url;
-                    btn.classList.remove('hidden');
-                    const filename = data.download_url.split('/').pop();
-                    btn.innerHTML = `<i class="fas fa-download me-2"></i> Tải về: ${filename}`;
-                } else if (data.status === 'FAILED') {
-                    clearInterval(interval);
-                    document.getElementById('status-text').innerText = "❌ Lỗi: Không tải được link này.";
-                    document.getElementById('progress-bar').classList.add('bg-danger');
+                    if (data.status === 'FINISHED') {
+                        clearInterval(interval);
+                        document.getElementById('status-text').innerText = "✅ Hoàn tất! Bấm nút dưới để tải.";
+                        
+                        // Đổi màu xanh lá cây báo hiệu thành công
+                        progressBar.classList.remove('progress-bar-animated');
+                        progressBar.classList.add('bg-success');
+                        
+                        const btn = document.getElementById('download-btn');
+                        btn.href = data.download_url;
+                        btn.classList.remove('hidden');
+                        
+                        // Lấy tên file từ URL để hiển thị cho đẹp
+                        let filename = 'Download File';
+                        try {
+                            filename = decodeURIComponent(data.download_url.split('/').pop());
+                        } catch(e) {}
+                        
+                        btn.innerHTML = `<i class="fas fa-download me-2"></i> TẢI VỀ: ${filename}`;
+                    } else if (data.status === 'FAILED') {
+                        clearInterval(interval);
+                        document.getElementById('status-text').innerText = "❌ Lỗi: Không tải được link này.";
+                        document.getElementById('status-text').className = 'fw-bold text-danger';
+                        progressBar.classList.add('bg-danger');
+                    }
+                } catch (e) {
+                    // Nếu lỗi mạng khi đang check status thì bỏ qua, chờ lần check sau
+                    console.log("Network glitch...", e);
                 }
             }, 1000);
         }

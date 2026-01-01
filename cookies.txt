@@ -32,3 +32,10 @@
 .threads.com	TRUE	/	TRUE	1775028885	ds_user_id	64010001927
 .threads.com	TRUE	/	TRUE	1782804874	sessionid	64010001927%3AIE77s1aNg4eu1E%3A0%3AAYgeASvymM19sU4Z6UvXxw8Nq-KosEY0y-chK7jJEg
 www.threads.com	FALSE	/	TRUE	0	cb	{"version":"1","date":"2029_07_03","third_party_consent":"withdrawn","categories":{},"integration_controls":{}}
+.youtube.com	TRUE	/	FALSE	0	PREF	hl=en&tz=UTC
+.youtube.com	TRUE	/	TRUE	0	SOCS	CAI
+.youtube.com	TRUE	/	TRUE	1767260803	GPS	1
+.youtube.com	TRUE	/	TRUE	0	YSC	1-P48XS9iPw
+.youtube.com	TRUE	/	TRUE	1782811003	VISITOR_INFO1_LIVE	qPHBWdjMuhU
+.youtube.com	TRUE	/	TRUE	1782811003	VISITOR_PRIVACY_METADATA	CgJWThIEGgAgYg%3D%3D
+.youtube.com	TRUE	/	TRUE	1782811003	__Secure-ROLLOUT_TOKEN	CKS9is6Al47GlAEQ2J3-6IDqkQMY2J3-6IDqkQM%3D

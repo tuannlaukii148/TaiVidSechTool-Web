@@ -1,24 +1,24 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv  # [MỚI] Import thư viện đọc file .env
+from dotenv import load_dotenv
 
-# [MỚI] Load biến môi trường từ file .env
+# Load biến môi trường từ file .env
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# [CẬP NHẬT] Đọc cấu hình bảo mật từ .env
-# Nếu không tìm thấy file .env thì dùng giá trị mặc định (phía sau dấu phẩy)
+# Đọc cấu hình bảo mật từ .env
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-hust-secret-key-default')
 
 # Chuyển đổi chuỗi 'True'/'False' từ .env thành Boolean
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-# Tách chuỗi bằng dấu phẩy (vd: "localhost,127.0.0.1" -> ['localhost', '127.0.0.1'])
+# Tách chuỗi bằng dấu phẩy
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
+# [QUAN TRỌNG] Fix lỗi CSRF trên Render (Để bấm nút tải không bị chặn)
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
-# --- CÁC CẤU HÌNH CŨ GIỮ NGUYÊN ---
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware', # (Dành cho nâng cao sau này)
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -45,7 +46,7 @@ ROOT_URLCONF = 'hust_web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')], # Thư mục HTML
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,31 +68,37 @@ DATABASES = {
     }
 }
 
-STATIC_URL = 'static/'
+# --- CẤU HÌNH STATIC FILES (CSS, JS, IMAGES) ---
+STATIC_URL = '/static/'
+
+# 1. Nơi để file ảnh gốc khi code (Folder 'static' ở máy bạn)
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# 2. [THÊM MỚI] Nơi Django gom file về khi chạy trên Server (Bắt buộc)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # --- CẤU HÌNH MEDIA (Nơi chứa file tải về) ---
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# --- CẤU HÌNH CELERY (QUAN TRỌNG) ---
-# [CẬP NHẬT] Đọc URL Redis từ .env
-CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/0')
 
+# --- CẤU HÌNH CELERY ---
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/0')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'Asia/Ho_Chi_Minh'
 
-# --- CELERY BEAT SCHEDULE (LỊCH DỌN RÁC) ---
+# --- CELERY BEAT SCHEDULE ---
 from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
     'clean-every-hour': {
         'task': 'core.tasks.clean_expired_files',
-        'schedule': 3600.0, # Chạy mỗi 3600 giây (1 tiếng)
+        'schedule': 3600.0,
     },
 }
