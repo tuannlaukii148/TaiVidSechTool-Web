@@ -1,0 +1,361 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUST TubeSaver - Tải Video Đa Nền Tảng</title>
+    <link rel="icon" type="image/png" href="{% static 'img/logo.png' %}">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #ff4b1f; /* Màu thương hiệu 1 */
+            --secondary-color: #ff9068; /* Màu thương hiệu 2 */
+            --bg-color: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER BRANDING */
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* MAIN CARD STYLE */
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .download-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: none;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .download-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header-custom {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .brand-logo-large {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* FORM ELEMENTS */
+        .form-control-lg, .form-select-lg {
+            border-radius: 12px;
+            border: 2px solid #e1e5ea;
+            padding: 15px;
+            font-size: 1rem;
+        }
+
+        .form-control-lg:focus, .form-select-lg:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 75, 31, 0.25);
+        }
+
+        .btn-brand {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+        .btn-brand:hover {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            transform: scale(1.02);
+            color: white;
+        }
+
+        /* OPTIONS SECTION */
+        .options-panel {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* UTILS */
+        .hidden { display: none; }
+        
+        /* ANIMATION */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 75, 31, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 75, 31, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 75, 31, 0); }
+        }
+        .downloading-pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <img src="{% static 'img/logo.png' %}" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/724/724933.png'">
+                HUST TubeSaver
+            </a>
+            <span class="navbar-text d-none d-sm-block">
+                Lữ khách vi hành cõi đời và thèm yêu
+            </span>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7 col-md-9">
+                    <div class="card download-card">
+                        
+                        <div class="card-header-custom">
+                            <img src="{% static 'img/logo.png' %}" alt="Logo" class="brand-logo-large" onerror="this.src='https://cdn-icons-png.flaticon.com/512/724/724933.png'">
+                            <h3 class="fw-bold mb-1">Tải đê k ai đánh giá m xem j đâu</h3>
+                            <p class="mb-0 opacity-75">Hỗ trợ Facebook, Youtube, TikTok, Soundcloud (Aria2c Engine)</p>
+                        </div>
+
+                        <div class="card-body p-4 p-md-5">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-secondary"><i class="fas fa-link me-2"></i>Dán liên kết vào đây:</label>
+                                <input type="text" id="url" class="form-control form-control-lg" placeholder="Ví dụ: https://www.youtube.com/watch?v=..." autofocus>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-secondary">Bạn muốn tải định dạng nào?</label>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="task_type" id="type_video" value="video" checked onchange="toggleOptions()">
+                                        <label class="btn btn-outline-secondary w-100 py-3" for="type_video">
+                                            <i class="fas fa-video fa-lg mb-1 d-block"></i> Video HD
+                                        </label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="task_type" id="type_audio" value="audio" onchange="toggleOptions()">
+                                        <label class="btn btn-outline-secondary w-100 py-3" for="type_audio">
+                                            <i class="fas fa-music fa-lg mb-1 d-block"></i> Nhạc MP3
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="options-panel">
+                                <div id="video_options" class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted">Chất lượng (Tối đa)</label>
+                                        <select id="resolution" class="form-select">
+                                            <option value="2160">4K Ultra HD</option>
+                                            <option value="1440">2K QHD</option>
+                                            <option value="1080" selected>Full HD (1080p)</option>
+                                            <option value="720">HD (720p)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted">Đuôi file</label>
+                                        <select id="container" class="form-select">
+                                            <option value="mp4" selected>MP4 (Phổ biến)</option>
+                                            <option value="mkv">MKV</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 mt-3 border-top pt-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="use_thumbnail">
+                                            <label class="form-check-label" for="use_thumbnail">Tải kèm Ảnh bìa (Thumbnail)</label>
+                                        </div>
+                                        <div class="form-check form-switch mt-2">
+                                            <input class="form-check-input" type="checkbox" id="use_subtitle">
+                                            <label class="form-check-label" for="use_subtitle">Tải kèm Phụ đề (Subtitle)</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="audio_options" class="row g-3 hidden">
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted">Định dạng</label>
+                                        <select id="audio_format" class="form-select">
+                                            <option value="mp3" selected>MP3</option>
+                                            <option value="m4a">M4A (AAC)</option>
+                                            <option value="flac">FLAC (Lossless)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted">Bitrate</label>
+                                        <select id="audio_quality" class="form-select">
+                                            <option value="best" selected>Cao nhất (320kbps)</option>
+                                            <option value="medium">Tiêu chuẩn (128kbps)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button onclick="startDownload()" class="btn btn-brand w-100 btn-lg shadow-sm">
+                                <i class="fas fa-rocket me-2"></i> BẮT ĐẦU TẢI NGAY
+                            </button>
+
+                            <div id="progress-area" class="mt-4 hidden">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span id="status-text" class="fw-bold text-primary">Đang khởi động...</span>
+                                    <span id="percent-text" class="fw-bold text-dark">0%</span>
+                                </div>
+                                <div class="progress" style="height: 10px; border-radius: 5px;">
+                                    <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-gradient" style="width: 0%"></div>
+                                </div>
+                                <a id="download-btn" href="#" class="btn btn-success w-100 mt-3 hidden py-3 fw-bold downloading-pulse" target="_blank">
+                                    <i class="fas fa-check-circle me-2"></i> TẢI FILE VỀ MÁY
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <footer>
+                        &copy; 2025 HUST TubeSaver. Developed by <span class="text-dark fw-bold">tuannlaukii148</span> using Django & Aria2c.
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleOptions() {
+            // Lấy radio button nào đang được check
+            const isVideo = document.getElementById('type_video').checked;
+            
+            if (isVideo) {
+                document.getElementById('video_options').classList.remove('hidden');
+                document.getElementById('audio_options').classList.add('hidden');
+            } else {
+                document.getElementById('video_options').classList.add('hidden');
+                document.getElementById('audio_options').classList.remove('hidden');
+            }
+        }
+
+        async function startDownload() {
+            const url = document.getElementById('url').value;
+            if (!url) {
+                alert("Vui lòng dán link video vào!");
+                document.getElementById('url').focus();
+                return;
+            }
+
+            // UI Reset
+            document.getElementById('progress-area').classList.remove('hidden');
+            document.getElementById('download-btn').classList.add('hidden');
+            document.getElementById('progress-bar').style.width = '0%';
+            document.getElementById('percent-text').innerText = '0%';
+            document.getElementById('status-text').innerText = 'Đang kết nối server...';
+            
+            const taskType = document.getElementById('type_video').checked ? 'video' : 'audio';
+
+            const payload = {
+                url: url,
+                task_type: taskType,
+                resolution: document.getElementById('resolution').value,
+                container: document.getElementById('container').value,
+                audio_format: document.getElementById('audio_format').value,
+                audio_quality: document.getElementById('audio_quality').value,
+                use_thumbnail: document.getElementById('use_thumbnail').checked,
+                use_subtitle: document.getElementById('use_subtitle').checked
+            };
+
+            try {
+                const res = await fetch('/api/start/', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                trackProgress(data.task_id);
+            } catch (e) {
+                alert("Lỗi kết nối Server! Đảm bảo Celery đang chạy.");
+            }
+        }
+
+        function trackProgress(taskId) {
+            const interval = setInterval(async () => {
+                const res = await fetch(`/api/status/${taskId}/`);
+                const data = await res.json();
+
+                let width = data.progress;
+                if (data.status === 'PENDING') width = 5;
+                if (data.status === 'PROCESSING') width = 95;
+
+                // Update UI
+                document.getElementById('progress-bar').style.width = width + '%';
+                document.getElementById('percent-text').innerText = width + '%';
+
+                // Dịch trạng thái sang tiếng Việt cho thân thiện
+                let statusMsg = data.status;
+                if (data.status === 'DOWNLOADING') statusMsg = 'Đang tải dữ liệu...';
+                if (data.status === 'PROCESSING') statusMsg = 'Đang xử lý (Ghép/Convert)...';
+                if (data.status === 'PENDING') statusMsg = 'Đang xếp hàng...';
+
+                document.getElementById('status-text').innerText = statusMsg;
+
+                if (data.status === 'FINISHED') {
+                    clearInterval(interval);
+                    document.getElementById('status-text').innerText = "✅ Hoàn tất!";
+                    document.getElementById('progress-bar').classList.add('bg-success');
+                    
+                    const btn = document.getElementById('download-btn');
+                    btn.href = data.download_url;
+                    btn.classList.remove('hidden');
+                    const filename = data.download_url.split('/').pop();
+                    btn.innerHTML = `<i class="fas fa-download me-2"></i> Tải về: ${filename}`;
+                } else if (data.status === 'FAILED') {
+                    clearInterval(interval);
+                    document.getElementById('status-text').innerText = "❌ Lỗi: Không tải được link này.";
+                    document.getElementById('progress-bar').classList.add('bg-danger');
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

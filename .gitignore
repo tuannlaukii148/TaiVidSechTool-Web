@@ -1,0 +1,20 @@
+# Bỏ qua thư mục ảo Python
+venv/
+env/
+
+# Bỏ qua file thực thi Windows (QUAN TRỌNG)
+bin/
+*.exe
+
+# Bỏ qua file cấu hình nhạy cảm
+.env
+
+# Bỏ qua Database local (Lên server sẽ tự tạo mới)
+db.sqlite3
+
+# Bỏ qua file cache
+__pycache__/
+*.pyc
+
+# Bỏ qua file media tải về (đỡ nặng)
+media/downloads/

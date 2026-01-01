@@ -1,0 +1,97 @@
+import os
+from pathlib import Path
+from dotenv import load_dotenv  # [MỚI] Import thư viện đọc file .env
+
+# [MỚI] Load biến môi trường từ file .env
+load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# [CẬP NHẬT] Đọc cấu hình bảo mật từ .env
+# Nếu không tìm thấy file .env thì dùng giá trị mặc định (phía sau dấu phẩy)
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-hust-secret-key-default')
+
+# Chuyển đổi chuỗi 'True'/'False' từ .env thành Boolean
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
+
+# Tách chuỗi bằng dấu phẩy (vd: "localhost,127.0.0.1" -> ['localhost', '127.0.0.1'])
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+
+
+# --- CÁC CẤU HÌNH CŨ GIỮ NGUYÊN ---
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'core',                  # App của mình
+    'django_celery_results', # Lưu kết quả
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'hust_web.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], # Thư mục HTML
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'hust_web.wsgi.application'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# --- CẤU HÌNH MEDIA (Nơi chứa file tải về) ---
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# --- CẤU HÌNH CELERY (QUAN TRỌNG) ---
+# [CẬP NHẬT] Đọc URL Redis từ .env
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/0')
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_TIMEZONE = 'Asia/Ho_Chi_Minh'
+
+# --- CELERY BEAT SCHEDULE (LỊCH DỌN RÁC) ---
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'clean-every-hour': {
+        'task': 'core.tasks.clean_expired_files',
+        'schedule': 3600.0, # Chạy mỗi 3600 giây (1 tiếng)
+    },
+}
