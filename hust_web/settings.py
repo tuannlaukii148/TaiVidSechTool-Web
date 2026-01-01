@@ -98,7 +98,7 @@ CELERY_TIMEZONE = 'Asia/Ho_Chi_Minh'
 from celery.schedules import crontab
 
 # [FIX LỖI DBM ERROR] Lưu lịch trình vào Database thay vì File
-CELERY_BEAT_SCHEDULER = 'django_celery_results.schedulers.DatabaseScheduler'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 
 CELERY_BEAT_SCHEDULE = {
     'clean-every-hour': {
