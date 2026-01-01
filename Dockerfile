@@ -1,5 +1,5 @@
 # Dùng Python 3.10 trên nền Linux nhẹ
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # 1. Cài đặt FFmpeg, Aria2c và Redis-tools (Client)
 RUN apt-get update && apt-get install -y \
