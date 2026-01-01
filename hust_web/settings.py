@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',                  # App của mình
     'django_celery_results', # Lưu kết quả
+    'django_celery_beat',    # [MỚI] Thêm cái này để lưu lịch vào DB
 ]
 
 MIDDLEWARE = [
@@ -95,6 +96,9 @@ CELERY_TIMEZONE = 'Asia/Ho_Chi_Minh'
 
 # --- CELERY BEAT SCHEDULE ---
 from celery.schedules import crontab
+
+# [FIX LỖI DBM ERROR] Lưu lịch trình vào Database thay vì File
+CELERY_BEAT_SCHEDULER = 'django_celery_results.schedulers.DatabaseScheduler'
 
 CELERY_BEAT_SCHEDULE = {
     'clean-every-hour': {
